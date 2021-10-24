@@ -37,6 +37,11 @@ extension DatabaseManager {
                 self.createNewRoom(with: player, completion: {_ in })
                 return
             }
+            // Room created
+            self.database.child("\(vesPinStringified)").child("roomData").setValue([
+                "gameOn": false,
+                "playerTurnIndex": 0
+            ])
             self.addToRoom(with: player, to: vesPinStringified, completion: {
                 self.giveLeadership(to: player.name, in: vesPinStringified)
                 completion(vesPinStringified)
@@ -57,7 +62,7 @@ extension DatabaseManager {
     
     /// Checks if player with a name already exists in the game room
     public func playerExists(in vesPin: String, with name: String, completion: @escaping ((Bool) -> Void)) {
-        database.child("\(vesPin)/\(name)").observeSingleEvent(of: .value, with: { snapshot in
+        database.child("\(vesPin)/players/\(name)").observeSingleEvent(of: .value, with: { snapshot in
             if snapshot.exists() {
                 completion(true)
             } else {
@@ -78,7 +83,7 @@ extension DatabaseManager {
             }
             
             print("Adding \(player.name) to \(vesPin)")
-            self.database.child("\(vesPin)/\(player.name)").setValue([
+            self.database.child("\(vesPin)/players/\(player.name)").setValue([
                 "word": player.word,
                 "wordTo": player.wordTo,
                 "wordFrom": player.wordFrom,
@@ -89,7 +94,7 @@ extension DatabaseManager {
     }
     
     public func giveLeadership(to name: String, in vesPin: String) {
-        self.database.child("\(vesPin)/\(name)").child("leader").setValue(true)
+        self.database.child("\(vesPin)/players/\(name)").child("leader").setValue(true)
     }
     
     public func isLeader(with name: String, in vesPin: String, completion: @escaping((Bool) -> Void)){
@@ -107,7 +112,7 @@ extension DatabaseManager {
     public func removeFromRoom(with player: Player, from vesPin: String) {
         playerExists(in: vesPin, with: player.name, completion: { exists in
             guard !exists else {
-                self.database.child("\(vesPin)/\(player.name)").setValue([])
+                self.database.child("\(vesPin)/players/\(player.name)").setValue([])
                 print("Removed \(player.name) from \(vesPin)")
                 return
             }
@@ -118,7 +123,7 @@ extension DatabaseManager {
         roomExists(with: vesPin, completion: { exists in
             if !exists { return }
                 
-            self.database.child(vesPin).observeSingleEvent(of: .value) { snapshot in
+            self.database.child("\(vesPin)/players").observeSingleEvent(of: .value) { snapshot in
                 var players: [DataSnapshot] = []
                 for player in snapshot.children.allObjects as! [DataSnapshot] {
                     players.append(player)
@@ -129,20 +134,86 @@ extension DatabaseManager {
     }
     
     public func onPlayerAdd(on vesPin: String, completion: @escaping (DataSnapshot) -> Void) {
-        self.database.child(vesPin).observe(.childAdded, with: { snapshot in
+        self.database.child("\(vesPin)/players").observe(.childAdded, with: { snapshot in
             completion(snapshot)
         })
     }
     
     public func onPlayerRemove(on vesPin: String, completion: @escaping (DataSnapshot) -> Void) {
-        self.database.child(vesPin).observe(.childRemoved, with: { snapshot in
+        self.database.child("\(vesPin)/players").observe(.childRemoved, with: { snapshot in
             completion(snapshot)
         })
     }
     
     public func onPlayerChange(on vesPin: String, completion: @escaping (DataSnapshot) -> Void) {
-        self.database.child(vesPin).observe(.childChanged, with: { snapshot in
+        self.database.child("\(vesPin)/players").observe(.childChanged, with: { snapshot in
             completion(snapshot)
+        })
+    }
+    
+    public func isGameOn(in vesPin: String, completion: @escaping((Bool) -> Void)) {
+        self.database.child(vesPin).child("roomData").observeSingleEvent(of: .value) { snapshot in
+            guard let isGameOn = snapshot.childSnapshot(forPath: "gameOn").value as? Bool else {
+                print("!err! \(snapshot.children.allObjects)")
+                return
+            }
+            
+            print("isGameOn: \(isGameOn)")
+            completion(isGameOn)
+        }
+    }
+    
+    public func startGame(in vesPin: String) {
+        self.database.child("\(vesPin)/roomData/").updateChildValues(["gameOn": true])
+    }
+    
+    public func onRoomChange(on vesPin: String, completion: @escaping (DataSnapshot) -> Void) {
+        self.database.child("\(vesPin)/roomData").observe(.childChanged, with: { snapshot in
+            completion(snapshot)
+        })
+    }
+}
+
+// MARK: - Word Managment
+extension DatabaseManager {
+    public func giveWord(word: String, to name: String, in vesPin: String) {
+        DatabaseManager.shared.playerExists(in: vesPin, with: name, completion: { exists in
+            guard exists else {
+                print("Player doesn't exist")
+                return
+            }
+            
+            self.database.child("\(vesPin)/players/\(name)").updateChildValues(["word": word])
+        })
+    }
+    
+    public func randomWordsAll(in vesPin: String, completion: @escaping () -> Void) {
+        self.database.child("\(vesPin)/players").observeSingleEvent(of: .value, with: { snapshot in
+            snapshot.children.forEach { p in
+                let name = (p as! DataSnapshot).key
+                self.giveWord(word: WordManager.shared.randomWord()!, to: name, in: vesPin)
+            }
+            completion()
+        })
+    }
+}
+
+//MARK: - Game Management
+extension DatabaseManager {
+    public func nextPlayerTurn(in vesPin: String) {
+        self.getPlayers(in: vesPin, completion: { players in
+            self.database.child("\(vesPin)/roomData").observeSingleEvent(of: .value, with: { snapshot in
+                guard let currentPlayerIndex = snapshot.childSnapshot(forPath: "playerTurnIndex").value as? Int else {
+                    print("!err! \(snapshot.children.allObjects)")
+                    return
+                }
+                
+                if currentPlayerIndex + 1 < players.count {
+                    self.database.child("\(vesPin)/roomData").updateChildValues(["playerTurnIndex": currentPlayerIndex + 1])
+                } else {
+                    self.database.child("\(vesPin)/roomData").updateChildValues(["playerTurnIndex": 0])
+                }
+            })
         })
     }
 }

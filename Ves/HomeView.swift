@@ -174,7 +174,7 @@ struct HomeView: View {
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
         }
-        .colorScheme(.light)
+        .preferredColorScheme(.dark)
     }
 }
 

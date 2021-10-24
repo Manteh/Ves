@@ -230,5 +230,26 @@ class PlayerUIView: UIView {
     }
 }
 
+final class WordManager {
+    let file = "words"
+    static let shared = WordManager()
+}
+
+extension WordManager {
+    public func randomWord() -> String? {
+        if let path = Bundle.main.path(forResource: file, ofType: "txt") {
+            do {
+                let data = try String(contentsOfFile: path, encoding: .utf8)
+                return data.components(separatedBy: .newlines).randomElement()
+            } catch {
+                print(error)
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+}
+
 
 

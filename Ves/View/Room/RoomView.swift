@@ -95,10 +95,8 @@ struct RoomView: View {
                         }
 
                         Button(action: {
-                            
-                            withAnimation(.spring()) {
-                                game.toggle()
-                            }
+                        
+                            DatabaseManager.shared.startGame(in: vesPin)
 
                             //print("Players: \(players.count)")
                             //assignPlayers()
@@ -137,6 +135,7 @@ struct RoomView: View {
                 GameView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player, players: $players)
             }
         }
+        .preferredColorScheme(.light)
         .navigationBarTitle("")
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
@@ -179,6 +178,14 @@ struct RoomView: View {
                     players[index] = snapshot
                 }
             })
+            
+            DatabaseManager.shared.onRoomChange(on: vesPin, completion: { snapshot in
+                if snapshot.key == "gameOn" {
+                    self.game = snapshot.value as! Bool
+                }
+                print("\(snapshot.key) Changed (ROOM)")
+            })
+        
         }
         .onDisappear {
             UIApplication.shared.setStatusBarStyle(.lightContent, animated: false)
