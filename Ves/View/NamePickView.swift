@@ -153,7 +153,7 @@ struct NamePickView: View {
                 
             }
             .padding(.top, 30)
-            .padding(.horizontal, 30)
+            .padding(.horizontal, 25)
         }
         .navigationBarTitle("")
         .navigationBarBackButtonHidden(true)

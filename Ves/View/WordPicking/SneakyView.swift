@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import FirebaseDatabase
 
 struct SneakyView: View {
     @GestureState var isHolding = false
     @State var navigationActive = false
+    @Binding var isShowing: Bool
+    @Binding var vesPin: String
+    @Binding var player: Player
+    @Binding var players: [DataSnapshot]
     
     var body: some View {
         NavigationView {
@@ -17,20 +22,26 @@ struct SneakyView: View {
                 Color(hex: "F2F2F6")
                     .edgesIgnoringSafeArea(.all)
                     .background(
-                        NavigationLink(destination: SuggestWordView(), isActive: $navigationActive) {
+                        NavigationLink(destination: SuggestWordView(isShowing: $isShowing, vesPin: $vesPin, player: $player, players: $players), isActive: $navigationActive) {
                             EmptyView()
                         }
                         .isDetailLink(false)
                     )
-                Image("sneaky")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: UIScreen.main.bounds.width)
-                    .edgesIgnoringSafeArea(.all)
-                    .offset(y: -150)
+                
+                VStack {
+                    Image("sneaky")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: UIScreen.main.bounds.width - 50)
+                        .edgesIgnoringSafeArea(.all)
+                        .offset(y: 100)
+                    Spacer()
+                }
+                .frame(width: .infinity, height: .infinity)
                     
                 VStack {
-                    Spacer(minLength: UIScreen.main.bounds.height - 450)
+                    
+                    Spacer()
                     
                     VStack(alignment: .leading, spacing: 20) {
                         HStack {
@@ -70,7 +81,7 @@ struct SneakyView: View {
                                         .font(.system(size: 15, weight: .bold, design: .rounded))
                                         .foregroundColor(.white)
                                     } else {
-                                        Text("Elon")
+                                        Text(self.getWordToPlayerName())
                                             .font(.system(size: 25, weight: .heavy, design: .rounded))
                                             .foregroundColor(.white)
                                     }
@@ -88,11 +99,10 @@ struct SneakyView: View {
                                     }
                             })
                         
-                        Spacer()
                     }
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, 25)
                     .padding(.top, 70)
-            }
+                }
                 .frame(height: .infinity)
             
             }
@@ -103,10 +113,8 @@ struct SneakyView: View {
         }
 
     }
-}
-
-struct SneakyView_Previews: PreviewProvider {
-    static var previews: some View {
-        SneakyView()
+    
+    func getWordToPlayerName() -> String {
+        return (players.filter{$0.key == player.name})[0].childSnapshot(forPath: "wordTo").value as! String
     }
 }

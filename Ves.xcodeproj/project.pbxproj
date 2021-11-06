@@ -13,6 +13,9 @@
 		FF57267C2715C5430014BF5E /* RoomPlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF57267B2715C5430014BF5E /* RoomPlayerCell.swift */; };
 		FF57267E27162C120014BF5E /* RandomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF57267D27162C120014BF5E /* RandomPickerView.swift */; };
 		FF78A38827135CF90052B493 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF78A38727135CF90052B493 /* GoogleService-Info.plist */; };
+		FF90ED912737344700304A55 /* NextSplitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED902737344700304A55 /* NextSplitter.swift */; };
+		FF90ED932737357400304A55 /* RoomHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED922737357400304A55 /* RoomHeader.swift */; };
+		FF90ED95273740C200304A55 /* VesPinBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED94273740C200304A55 /* VesPinBadge.swift */; };
 		FF9921F626F64E6C0082A1D0 /* VesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9921F526F64E6C0082A1D0 /* VesApp.swift */; };
 		FF9921F826F64E6C0082A1D0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9921F726F64E6C0082A1D0 /* ContentView.swift */; };
 		FF9921FA26F64E710082A1D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF9921F926F64E710082A1D0 /* Assets.xcassets */; };
@@ -30,7 +33,6 @@
 		FFE31395271F01D500070C4A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE31394271F01D500070C4A /* GameView.swift */; };
 		FFEC397D26FCBA19009A0D59 /* RoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC397C26FCBA19009A0D59 /* RoomView.swift */; };
 		FFEC398026FCC81E009A0D59 /* Rooms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC397F26FCC81E009A0D59 /* Rooms.swift */; };
-		FFEC398226FCE9AA009A0D59 /* WordPickingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC398126FCE9A7009A0D59 /* WordPickingView.swift */; };
 		FFEC398427009773009A0D59 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC398327009772009A0D59 /* Players.swift */; };
 		FFECDE6026F91D07002F2DB2 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FFECDE5F26F91D06002F2DB2 /* video.mp4 */; };
 		FFECDE6226FBB67C002F2DB2 /* NamePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */; };
@@ -45,6 +47,9 @@
 		FF57267B2715C5430014BF5E /* RoomPlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomPlayerCell.swift; sourceTree = "<group>"; };
 		FF57267D27162C120014BF5E /* RandomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPickerView.swift; sourceTree = "<group>"; };
 		FF78A38727135CF90052B493 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FF90ED902737344700304A55 /* NextSplitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextSplitter.swift; sourceTree = "<group>"; };
+		FF90ED922737357400304A55 /* RoomHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomHeader.swift; sourceTree = "<group>"; };
+		FF90ED94273740C200304A55 /* VesPinBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VesPinBadge.swift; sourceTree = "<group>"; };
 		FF9921F226F64E6C0082A1D0 /* Ves.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ves.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF9921F526F64E6C0082A1D0 /* VesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VesApp.swift; sourceTree = "<group>"; };
 		FF9921F726F64E6C0082A1D0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -64,7 +69,6 @@
 		FFE31394271F01D500070C4A /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		FFEC397C26FCBA19009A0D59 /* RoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomView.swift; sourceTree = "<group>"; };
 		FFEC397F26FCC81E009A0D59 /* Rooms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rooms.swift; sourceTree = "<group>"; };
-		FFEC398126FCE9A7009A0D59 /* WordPickingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPickingView.swift; sourceTree = "<group>"; };
 		FFEC398327009772009A0D59 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		FFECDE5F26F91D06002F2DB2 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video.mp4; sourceTree = "<group>"; };
 		FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickView.swift; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 			children = (
 				FFEC397C26FCBA19009A0D59 /* RoomView.swift */,
 				FF57267B2715C5430014BF5E /* RoomPlayerCell.swift */,
+				FF90ED94273740C200304A55 /* VesPinBadge.swift */,
 			);
 			path = Room;
 			sourceTree = "<group>";
@@ -172,10 +177,10 @@
 				FF99220C26F729250082A1D0 /* PinDigitView.swift */,
 				FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */,
 				FF57267A2715C4F50014BF5E /* Room */,
-				FFEC398126FCE9A7009A0D59 /* WordPickingView.swift */,
 				FFE31388271E2D9A00070C4A /* WordPicking */,
 				FF57267D27162C120014BF5E /* RandomPickerView.swift */,
 				FFE3138B271EE98D00070C4A /* Game */,
+				FF90ED922737357400304A55 /* RoomHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -202,6 +207,7 @@
 			children = (
 				FFE3138C271EE9AF00070C4A /* WaitingView.swift */,
 				FFE31394271F01D500070C4A /* GameView.swift */,
+				FF90ED902737344700304A55 /* NextSplitter.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -339,15 +345,17 @@
 				FFEC397D26FCBA19009A0D59 /* RoomView.swift in Sources */,
 				FFE3138D271EE9B400070C4A /* WaitingView.swift in Sources */,
 				FF99220926F64F780082A1D0 /* Funcs.swift in Sources */,
+				FF90ED932737357400304A55 /* RoomHeader.swift in Sources */,
 				FFE3138A271E2DBB00070C4A /* SuggestWordView.swift in Sources */,
 				FF99220D26F729250082A1D0 /* PinDigitView.swift in Sources */,
 				FFECDE6226FBB67C002F2DB2 /* NamePickView.swift in Sources */,
 				FF57267E27162C120014BF5E /* RandomPickerView.swift in Sources */,
 				FFEC398026FCC81E009A0D59 /* Rooms.swift in Sources */,
 				FF9921F826F64E6C0082A1D0 /* ContentView.swift in Sources */,
+				FF90ED95273740C200304A55 /* VesPinBadge.swift in Sources */,
 				FF9921F626F64E6C0082A1D0 /* VesApp.swift in Sources */,
 				FFE31395271F01D500070C4A /* GameView.swift in Sources */,
-				FFEC398226FCE9AA009A0D59 /* WordPickingView.swift in Sources */,
+				FF90ED912737344700304A55 /* NextSplitter.swift in Sources */,
 				FFEC398427009773009A0D59 /* Players.swift in Sources */,
 				FF57267C2715C5430014BF5E /* RoomPlayerCell.swift in Sources */,
 				FF21A9E3270EE73700166CCC /* DatabaseManager.swift in Sources */,
@@ -468,7 +476,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

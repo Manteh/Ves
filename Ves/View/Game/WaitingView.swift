@@ -7,10 +7,13 @@
 
 import SwiftUI
 import Lottie
+import FirebaseDatabase
 
 struct WaitingView: View {
     
     @State private var isPaused: Bool = false
+    @Binding var players: [DataSnapshot]
+    @Binding var vesPin: String
     
     var body: some View {
         ZStack {
@@ -28,31 +31,28 @@ struct WaitingView: View {
                         .foregroundColor(Color(hex: "333333").opacity(0.1))
                     
                     VStack(spacing: 20) {
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(orangeGradientLeftRight)
-                            .frame(height: 80 + 11.2)
-                            .overlay(
-                                Text("JOHNNY")
-                                    .font(.system(size: 20, weight: .heavy, design: .rounded))
-                                    .foregroundColor(.white)
-                            )
-                        
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(blueGradientButton)
-                            .frame(height: 80 + 11.2)
-                            .overlay(
-                                Text("BOB")
-                                    .font(.system(size: 20, weight: .heavy, design: .rounded))
-                                    .foregroundColor(.white)
-                            )
+                        ForEach(self.playersWithNoWords(players: players), id: \.key) { p in
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(orangeGradientLeftRight)
+                                .frame(height: 80 + 11.2)
+                                .overlay(
+                                    Text(p.childSnapshot(forPath: "wordFrom").value as! String)
+                                        .font(.system(size: 20, weight: .heavy, design: .rounded))
+                                        .foregroundColor(.white)
+                                )
+                        }
                     }
                     
                 }
-                .padding(.horizontal, 30)
+                .padding(.horizontal, 25)
                 .padding(.top, 30)
             }
         }
         .preferredColorScheme(.light)
+    }
+    
+    func playersWithNoWords(players: [DataSnapshot]) -> [DataSnapshot]{
+        return players.filter { $0.childSnapshot(forPath: "word").value as! String == "" }
     }
 }
 

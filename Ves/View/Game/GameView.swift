@@ -15,7 +15,10 @@ struct GameView: View {
     @Binding var vesPin: String
     @Binding var player: Player
     @Binding var players: [DataSnapshot]
+    @Binding var cpIndex: Int
     @State var igPlayers = [Player(name: "STEVE"), Player(name: "ELON"), Player(name: "BOB")]
+    @State var passClicked = false
+    @State var turnsMade = 0
     
     var body: some View {
         ZStack {
@@ -24,76 +27,50 @@ struct GameView: View {
             
             VStack(spacing: 0) {
                 
-                // Header
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("\(players.count) PLAYERS")
-                        .font(.system(size: 20, weight: .heavy, design: .rounded))
-                        .selfSizeMask(orangeGradientText)
-                    HStack {
-                        Text("Guessing")
-                            .font(.system(size: 35, weight: .heavy, design: .rounded))
-                            .foregroundColor(Color(hex: "333333"))
-                        Spacer()
-                        Button(action: {
-                            DatabaseManager.shared.nextPlayerTurn(in: vesPin)
-                            //DatabaseManager.shared.removeFromRoom(with: player, from: vesPin)
-                            //self.navIsActive = false
-                        }, label: {
-                            Image(systemName: "xmark.square.fill")
-                                .resizable()
-                                .foregroundColor(.black.opacity(0.1))
-                        })
-                        .frame(width: 25, height: 25)
-                    }
-                }
+                RoomHeader(title: "Guessing", players: $players, onMarkClick: {
+                    DatabaseManager.shared.removeFromRoom(with: player, from: vesPin)
+                    self.navIsActive = false
+                })
                 
                 ScrollView(showsIndicators: false) {
-                    ForEach(0..<players.count) { i in
-                        if i == 0 {
-                            localPlayerTurnView(player: $players[i], localPlayer: $player)
-                            
-                            // NEXT splitter
-                            HStack {
-                                Line()
-                                    .stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [5]))
-                                    .frame(height: 1)
-                                Text(" NEXT ")
-                                    .font(.system(size: 15, weight: .black, design: .rounded))
-                                Line()
-                                    .stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [5]))
-                                    .frame(height: 1)
-                            }
-                            .opacity(0.1)
-                            .padding(.vertical, 30)
+                    ForEach($players, id: \.self) { p in
+                        if players.index(of: p.wrappedValue) == 0 {
+                            currentTurnerView(currentTurnPlayer: p, localPlayer: $player, vesPin: $vesPin, passClicked: $passClicked)
+                                .onChange(of: passClicked, perform: { newValue in
+                                    DatabaseManager.shared.turnMadeBy(name: p.wrappedValue.key, in: vesPin, completion: { updatedPlayers in
+                                        print("Updated players: \(updatedPlayers)")
+                                        self.players = updatedPlayers
+                                        self.passClicked = false
+                                    })
+                                })
                         } else {
-                            playerCardView(player: $players[i], localPlayer: $player)
+                            if players.index(of: p.wrappedValue) == 1 {
+                                NextSplitter()
+                            }
+                            playerCardView(player: p, localPlayer: $player)
                         }
                     }
                 }
                 .onAppear {
                     print("GameView appeared")
-                    DatabaseManager.shared.randomWordsAll(in: vesPin, completion: {
-                        DatabaseManager.shared.getPlayers(in: vesPin, completion: { snapshot in
-                            players = snapshot
-                            print("player1: \(players[0])")
-                        })
-                    })
                 }
                 
                 Spacer()
             }
             .padding(.vertical, 30)
-            .padding(.horizontal, 30)
+            .padding(.horizontal, 25)
         }
         .preferredColorScheme(.light)
     }
 }
 
-struct localPlayerTurnView: View {
-    
-    @Binding var player: DataSnapshot
+struct currentTurnerView: View {
+
+    @Binding var currentTurnPlayer: DataSnapshot
     @Binding var localPlayer: Player
-    @State var controlOpacity = 0
+    @Binding var vesPin: String
+    @Binding var passClicked: Bool
+    @State var controlOpacity = 1
     
     var body: some View {
         VStack {
@@ -101,10 +78,10 @@ struct localPlayerTurnView: View {
                 HStack {
                     Image(systemName: "person.fill")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                    Text("\(player.key)")
+                    Text("\(currentTurnPlayer.key)")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                     
-                    if localPlayer.name == player.key {
+                    if isLocalTurn() {
                         Text("  •  You")
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                     }
@@ -112,7 +89,7 @@ struct localPlayerTurnView: View {
                 }
                 .foregroundColor(.white)
                 
-                if localPlayer.name == player.key {
+                if isLocalTurn() {
                     VStack(spacing: 20) {
                         HStack {
                             Text("Reveal me")
@@ -127,7 +104,11 @@ struct localPlayerTurnView: View {
                                 .foregroundColor(.white.opacity(0.1))
                         )
                         
-                        Button(action: { }, label: {
+                        Button(action: {
+                            // Remove playerObj at index 0 at put it last
+                            //DatabaseManager.shared.nextPlayerTurn(in: vesPin)
+                            passClicked = true
+                        }, label: {
                             HStack {
                                 Text("Pass")
                                     .selfSizeMask(orangeGradientText)
@@ -146,18 +127,31 @@ struct localPlayerTurnView: View {
                     .opacity(Double(controlOpacity))
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                 } else {
-                    holdToView(player: $player)
+                    holdToView(player: $currentTurnPlayer)
                 }
             }
             .padding(30)
-            .background(
+            .background (
                 RoundedRectangle(cornerRadius: 15)
-                .fill(orangeGradientBG)
+                    .fill(playerColor(player: currentTurnPlayer))
             )
             
         }
         .padding(.top, 50)
         
+    }
+    
+    func isLocalTurn() -> Bool {
+        return localPlayer.name == currentTurnPlayer.key
+    }
+    
+    func playerColor(player: DataSnapshot) -> LinearGradient {
+        if currentTurnPlayer.childSnapshot(forPath: "color").value as! String == "orange" {
+            return orangeGradientBG
+        } else if currentTurnPlayer.childSnapshot(forPath: "color").value as! String == "blue" {
+            return blueGradientBG
+        }
+        return LinearGradient.init(colors: [.white], startPoint: .top, endPoint: .bottom)
     }
 }
 
@@ -233,6 +227,22 @@ struct holdToView: View {
     }
 }
 
+struct Safe<T: RandomAccessCollection & MutableCollection, C: View>: View {
+    typealias BoundElement = Binding<T.Element>
+    private let binding: BoundElement
+    private let content: (BoundElement) -> C
+
+    init(_ binding: Binding<T>, index: T.Index, @ViewBuilder content: @escaping (BoundElement) -> C) {
+        self.content = content
+        self.binding = .init(get: { binding.wrappedValue[index] },
+                             set: { binding.wrappedValue[index] = $0 })
+    }
+
+    var body: some View {
+        content(binding)
+    }
+}
+
 struct Line: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -244,7 +254,7 @@ struct Line: Shape {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(navIsActive: .constant(true), vesPin: .constant("XXXXXX"), player: .constant(Player(name: "JXS")), players: .constant([DataSnapshot.init()]))
+        GameView(navIsActive: .constant(true), vesPin: .constant("XXXXXX"), player: .constant(Player(name: "JXS")), players: .constant([DataSnapshot.init()]), cpIndex: .constant(0))
     }
 }
 

@@ -40,12 +40,22 @@ extension DatabaseManager {
             // Room created
             self.database.child("\(vesPinStringified)").child("roomData").setValue([
                 "gameOn": false,
-                "playerTurnIndex": 0
+                "showWordPick": false
             ])
             self.addToRoom(with: player, to: vesPinStringified, completion: {
                 self.giveLeadership(to: player.name, in: vesPinStringified)
                 completion(vesPinStringified)
             })
+        })
+    }
+    
+    public func deleteRoom(with vesPin: String) {
+        self.roomExists(with: vesPin, completion: { exists in
+            if exists {
+                DispatchQueue.main.async {
+                    self.database.child("\(vesPin)").removeValue()
+                }
+            }
         })
     }
     
@@ -87,7 +97,9 @@ extension DatabaseManager {
                 "word": player.word,
                 "wordTo": player.wordTo,
                 "wordFrom": player.wordFrom,
-                "leader": false
+                "leader": false,
+                "turns": 0,
+                "color": ["orange"].randomElement()!
             ])
             completion()
         })
@@ -110,10 +122,26 @@ extension DatabaseManager {
     }
     
     public func removeFromRoom(with player: Player, from vesPin: String) {
+        print("RemoveFromRoom:")
         playerExists(in: vesPin, with: player.name, completion: { exists in
+            print("RemoveFromRoom: Checking if player exists")
             guard !exists else {
-                self.database.child("\(vesPin)/players/\(player.name)").setValue([])
-                print("Removed \(player.name) from \(vesPin)")
+                print("RemoveFromRoom: Performing player removal")
+                DispatchQueue.main.async {
+                    self.database.child("\(vesPin)/players/\(player.name)").setValue([])
+                    print("Removed \(player.name) from \(vesPin)")
+                }
+                
+                print("RemoveFromRoom: Checking if room is empty")
+                DispatchQueue.main.async {
+                    self.getPlayers(in: vesPin, completion: { players in
+                        if players.count == 0 {
+                            print("RemoveFromRoom: Deleting room")
+                            self.deleteRoom(with: vesPin)
+                        }
+                    })
+                }
+                
                 return
             }
         })
@@ -151,6 +179,21 @@ extension DatabaseManager {
         })
     }
     
+    public func waitingViewUpdate(on vesPin: String, players: [DataSnapshot]) {
+        var suggestingPlayers = players
+        DatabaseManager.shared.getPlayers(in: vesPin) { dbPlayers in
+            suggestingPlayers.removeAll()
+            for p in dbPlayers {
+                if p.childSnapshot(forPath: "word").value as! String == "" {
+                    let wordGiver = dbPlayers.filter { $0.key == p.childSnapshot(forPath: "wordFrom").value as! String}
+                    if suggestingPlayers.firstIndex(of: wordGiver[0]) == nil {
+                        suggestingPlayers.append(wordGiver[0])
+                    }
+                }
+            }
+        }
+    }
+    
     public func isGameOn(in vesPin: String, completion: @escaping((Bool) -> Void)) {
         self.database.child(vesPin).child("roomData").observeSingleEvent(of: .value) { snapshot in
             guard let isGameOn = snapshot.childSnapshot(forPath: "gameOn").value as? Bool else {
@@ -167,53 +210,104 @@ extension DatabaseManager {
         self.database.child("\(vesPin)/roomData/").updateChildValues(["gameOn": true])
     }
     
+    public func startWordPicking(in vesPin: String) {
+        self.database.child("\(vesPin)/roomData/").updateChildValues(["showWordPick": true])
+    }
+    
+    public func endWordPicking(in vesPin: String) {
+        self.database.child("\(vesPin)/roomData/").updateChildValues(["showWordPick": false])
+    }
+    
     public func onRoomChange(on vesPin: String, completion: @escaping (DataSnapshot) -> Void) {
         self.database.child("\(vesPin)/roomData").observe(.childChanged, with: { snapshot in
             completion(snapshot)
         })
     }
+    
 }
 
 // MARK: - Word Managment
 extension DatabaseManager {
-    public func giveWord(word: String, to name: String, in vesPin: String) {
-        DatabaseManager.shared.playerExists(in: vesPin, with: name, completion: { exists in
+    public func giveWord(word: String, to: String, in vesPin: String, completion: @escaping () -> Void) {
+        DatabaseManager.shared.playerExists(in: vesPin, with: to, completion: { exists in
             guard exists else {
-                print("Player doesn't exist")
+                print("Giving word to player: Player doesn't exist")
                 return
             }
             
-            self.database.child("\(vesPin)/players/\(name)").updateChildValues(["word": word])
-        })
-    }
-    
-    public func randomWordsAll(in vesPin: String, completion: @escaping () -> Void) {
-        self.database.child("\(vesPin)/players").observeSingleEvent(of: .value, with: { snapshot in
-            snapshot.children.forEach { p in
-                let name = (p as! DataSnapshot).key
-                self.giveWord(word: WordManager.shared.randomWord()!, to: name, in: vesPin)
-            }
+            self.database.child("\(vesPin)/players/\(to)").updateChildValues(["word": word])
+            print("Giving word to player: Added word |\(word)| to |\(to)|")
             completion()
         })
     }
+    
+    public func linkPlayers(giver: String, receiver: String, in vesPin: String) {
+        DatabaseManager.shared.playerExists(in: vesPin, with: receiver, completion: { exists in
+            guard exists else {
+                print("Receiver doesn't exist")
+                return
+            }
+            
+            self.database.child("\(vesPin)/players/\(receiver)").updateChildValues(["wordFrom": giver])
+            self.database.child("\(vesPin)/players/\(giver)").updateChildValues(["wordTo": receiver])
+        })
+    }
+    
+    public func getNoWordPlayers(in vesPin: String, completion: @escaping ([DataSnapshot]) -> Void) {
+        self.getPlayers(in: vesPin) { dbPlayers in
+            completion(dbPlayers.filter { $0.childSnapshot(forPath: "word").value as! String == "" })
+        }
+    }
+    
 }
 
 //MARK: - Game Management
 extension DatabaseManager {
-    public func nextPlayerTurn(in vesPin: String) {
-        self.getPlayers(in: vesPin, completion: { players in
-            self.database.child("\(vesPin)/roomData").observeSingleEvent(of: .value, with: { snapshot in
-                guard let currentPlayerIndex = snapshot.childSnapshot(forPath: "playerTurnIndex").value as? Int else {
-                    print("!err! \(snapshot.children.allObjects)")
-                    return
-                }
-                
-                if currentPlayerIndex + 1 < players.count {
-                    self.database.child("\(vesPin)/roomData").updateChildValues(["playerTurnIndex": currentPlayerIndex + 1])
-                } else {
-                    self.database.child("\(vesPin)/roomData").updateChildValues(["playerTurnIndex": 0])
-                }
-            })
+    
+    public func turnMadeBy(name: String, in vesPin: String, completion: @escaping ([DataSnapshot]) -> Void) {
+        self.database.updateChildValues(["\(vesPin)/players/\(name)/turns": ServerValue.increment(1)]) { (error:Error?, ref:DatabaseReference) in
+            if let error = error {
+              print("Turns addition failed: \(error).")
+            } else {
+                self.nextTurn(in: vesPin, completion: { updatedPlayers in
+                    completion(updatedPlayers)
+                })
+            }
+        }
+    }
+    
+    public func nextRoomTurn(in vesPin: String, completion: @escaping (Int) -> Void) {
+        self.database.updateChildValues(["\(vesPin)/roomData/roomTurns": ServerValue.increment(1)])
+    }
+    
+    public func getTurns(name: String, in vesPin: String, completion: @escaping (Int) -> Void) {
+        self.database.child("\(vesPin)/players/\(name)").observeSingleEvent(of: .value, with: { snapshot in
+            guard let turns = snapshot.childSnapshot(forPath: "turns").value as? Int else {
+                print("!err! \(snapshot.children.allObjects)")
+                return
+            }
+            completion(turns)
+        })
+    }
+    
+    public func getRoomTurns(in vesPin: String, completion: @escaping (Int) -> Void) {
+        self.database.child("\(vesPin)/roomData/").observeSingleEvent(of: .value, with: { snapshot in
+            guard let turns = snapshot.childSnapshot(forPath: "roomTurns").value as? Int else {
+                print("!err! \(snapshot.children.allObjects)")
+                return
+            }
+            completion(turns)
+        })
+    }
+    
+    public func nextTurn(in vesPin: String, completion: @escaping ([DataSnapshot]) -> Void) {
+        self.getPlayers(in: vesPin, completion: { dbPlayers in
+            var sortedPlayers = dbPlayers
+            
+            sortedPlayers.sort {
+                ($0.childSnapshot(forPath: "turns").value as! Int) < ($1.childSnapshot(forPath: "turns").value as! Int)
+            }
+            completion(sortedPlayers)
         })
     }
 }
