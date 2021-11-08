@@ -13,7 +13,6 @@ import Firebase
 struct VesApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
     
     init() {
         FirebaseApp.configure()
@@ -22,7 +21,6 @@ struct VesApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
-//            SuggestWordView(isShowing: .constant(true), vesPin: .constant("ABCDEFG"))
         }
     }
 }

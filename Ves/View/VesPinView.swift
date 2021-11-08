@@ -10,16 +10,16 @@ import AudioToolbox
 
 struct VesPinView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @Binding var navIsActive: Bool
-    @State var currentPinIndex = 0
-    @State var vesPin = ""
-    @State var typeCount = 0
-    @State var enableTyping: Bool? = false
     @State var buttonVisible: Bool = false
-    @State var pinAttempts: Int = 0
+    @State var enableTyping: Bool? = false
+    @State var vesPin = ""
     @State var isShowingDetailView = false
-    @State var pinLength = 5
-
+    @State var currentPinIndex = 0
+    @State var typeCount = 0
+    @State var pinAttempts: Int = 0
+    
     var body: some View {
 
         ZStack {
@@ -51,68 +51,7 @@ struct VesPinView: View {
                     }
                     .foregroundColor(.white)
                     
-                    HStack(alignment: .center, spacing: 10) {
-                        PinDigitView(index: 0, currentIndex: $currentPinIndex, digitValue: $vesPin)
-                        PinDigitView(index: 1, currentIndex: $currentPinIndex, digitValue: $vesPin)
-                        PinDigitView(index: 2, currentIndex: $currentPinIndex, digitValue: $vesPin)
-                        PinDigitView(index: 3, currentIndex: $currentPinIndex, digitValue: $vesPin)
-                        PinDigitView(index: 4, currentIndex: $currentPinIndex, digitValue: $vesPin)
-                    }
-                    .modifier(Shake(animatableData: CGFloat(pinAttempts)))
-                    .background(
-                        CustomTextField(text: $vesPin,
-                                        nextResponder: .constant(nil),
-                                        isResponder: $enableTyping,
-                                        textLimit: $pinLength,
-                                        isSecured: true,
-                                        keyboard: .default)
-                            .onChange(of: vesPin) {char in
-                                if vesPin[currentPinIndex] == " " {
-                                    return
-                                }
-                                
-                                if currentPinIndex < 5 {
-                                    if vesPin.count > typeCount {
-                                        currentPinIndex += 1
-                                        let impactMed = UIImpactFeedbackGenerator(style: .heavy)
-                                        impactMed.impactOccurred()
-                                    } else {
-                                        if currentPinIndex > 0 {
-                                            currentPinIndex -= 1
-                                        }
-                                    }
-                                }
-                                
-                                if vesPin.count >= 5 {
-                                    vesPin = vesPin.uppercased()
-                                    DatabaseManager.shared.roomExists(with: vesPin, completion: { exists in
-                                        guard exists else {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                                                withAnimation(.default) {
-                                                    self.pinAttempts += 1
-                                                }
-                                                resetDigits()
-                                            }
-                                            return
-                                        }
-                                        
-                                        withAnimation(.spring()) {
-                                            buttonVisible = true
-                                        }
-                                    })
-                                }
-                                
-                                typeCount = vesPin.count
-                            }
-                            .frame(width: .infinity)
-                            .background(Color.red)
-                            .opacity(0)
-                            .disabled(currentPinIndex >= 5 ? true : false)
-                            
-                            
-                    )
-                    .frame(minHeight: 71.2)
+                    PinFieldView(vesPin: $vesPin, enableTyping: $enableTyping, buttonVisible: $buttonVisible, currentPinIndex: $currentPinIndex, typeCount: $typeCount, pinAttempts: $pinAttempts)
                                                             
                     if buttonVisible {
                         
@@ -187,14 +126,6 @@ struct VesPinView: View {
         enableTyping = false
         buttonVisible = false
         pinAttempts = 0
-    }
-    
-    func resetDigits() {
-        currentPinIndex = 1
-        vesPin = ""
-        typeCount = 0
-        enableTyping = true
-        buttonVisible = false
     }
     
 }

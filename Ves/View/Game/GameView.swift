@@ -15,7 +15,6 @@ struct GameView: View {
     @Binding var vesPin: String
     @Binding var player: Player
     @Binding var players: [DataSnapshot]
-    @Binding var cpIndex: Int
     @State var igPlayers = [Player(name: "STEVE"), Player(name: "ELON"), Player(name: "BOB")]
     @State var passClicked = false
     @State var turnsMade = 0
@@ -111,10 +110,10 @@ struct currentTurnerView: View {
                         }, label: {
                             HStack {
                                 Text("Pass")
-                                    .selfSizeMask(orangeGradientText)
+                                    .selfSizeMaskOrColor(orangeGradientText, true)
                                 Spacer()
                                 Image(systemName: "arrow.right")
-                                    .selfSizeMask(orangeGradientText)
+                                    .selfSizeMaskOrColor(orangeGradientText, true)
                             }
                             .padding(15)
                             .padding(.vertical, 5)
@@ -254,7 +253,7 @@ struct Line: Shape {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(navIsActive: .constant(true), vesPin: .constant("XXXXXX"), player: .constant(Player(name: "JXS")), players: .constant([DataSnapshot.init()]), cpIndex: .constant(0))
+        GameView(navIsActive: .constant(true), vesPin: .constant("XXXXXX"), player: .constant(Player(name: "JXS")), players: .constant([DataSnapshot.init()]))
     }
 }
 

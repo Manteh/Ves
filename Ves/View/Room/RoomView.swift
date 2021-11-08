@@ -17,7 +17,6 @@ struct RoomView: View {
     @State var game = false
     @State var playerToPick: String = ""
     @State var players = [DataSnapshot]()
-    @State var cpIndex = 0
     @State var showWordPicking = false
     @State var popOffset = UIScreen.main.bounds.height
     
@@ -34,17 +33,20 @@ struct RoomView: View {
             if !game {
                 VStack(spacing: 0) {
                     
+                    // Header titles
                     RoomHeader(title: "In The Room", players: $players, onMarkClick: {
                         DatabaseManager.shared.removeFromRoom(with: player, from: vesPin)
                         self.navIsActive = false
                     })
                     .padding(.bottom, 50)
  
+                    // Orange banner with current vesPin
                     VesPinBadge(vesPin: $vesPin)
                     
+                    // Room player cards
                     ScrollView(showsIndicators: false) {
                         LazyVGrid(columns: columns, spacing: 15) {
-                            ForEach($players, id: \.self) { p in
+                            ForEach($players, id: \.key) { p in
                                 RoomPlayerCell(player: p)
                             }
                         }
@@ -52,40 +54,16 @@ struct RoomView: View {
                     }
                     .padding(.bottom, 50)
                     
-                    VStack(alignment: .center) {
-
-                        HStack {
-                            Text("EVERYONE READY?")
-                                .font(.system(size: 30, weight: .black, design: .rounded))
-                                .foregroundColor(Color(hex: "333333"))
-                                .opacity(0.1)
+                    
+                    // Continue button for room leaders
+                    RoomContinue(onButtonClick: {
+                        assignPlayers(vesPin: vesPin) {
+                            DatabaseManager.shared.startWordPicking(in: vesPin)
                         }
-
-                        Button(action: {
-                            assignPlayers(vesPin: vesPin) {
-                                DatabaseManager.shared.startWordPicking(in: vesPin)
-                            }
-                        }, label: {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(orangeGradientLeftRight)
-                                .frame(maxHeight: 60 + 11.2)
-                                .overlay(
-                                    HStack {
-                                        Image(systemName: "arrow.right").opacity(0)
-                                        Spacer()
-                                        Text("CONTINUE")
-                                        Spacer()
-                                        Image(systemName: "arrow.right")
-                                    }
-                                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 20)
-                                )
-                        })
-
-                    }
-                    .offset(x: isLeaderLocal(name: player.name) ? 0 : 500)
-                    .animation(.spring(), value: isLeaderLocal(name: player.name))
+                    })
+                    .offset(x: players.count > 1 && isLeaderLocal(name: player.name) ? 0 : UIScreen.main.bounds.width + 500)
+                    .disabled(players.count <= 1 || !isLeaderLocal(name: player.name))
+                    .animation(.spring())
                     
                     Spacer()
                     
@@ -93,7 +71,7 @@ struct RoomView: View {
                 .padding(.top, 30)
                 .padding(.horizontal, 25)
             } else {
-                GameView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player, players: $players, cpIndex: $cpIndex)
+                GameView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player, players: $players)
             }
             
             SneakyView(isShowing: $showWordPicking, vesPin: $vesPin, player: $player, players: $players)
@@ -106,22 +84,33 @@ struct RoomView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .onAppear {
-            //print("Is leader \(isLeader(playerName: player.name))")
-            
             UIApplication.shared.statusBarStyle = .darkContent
+            self.addObservers()
+        }
+    }
+    
+    func addObservers() {
+        self.onPlayerAddObserve()
+        self.onPlayerRemoveObserve()
+        self.onPlayerChangeObserve()
+        self.onRoomChangeObserve()
+    }
+    
+    func onPlayerAddObserve() {
+        DatabaseManager.shared.onPlayerAdd(on: vesPin, completion: { snapshot in
+            print("\(snapshot.key) Added")
+            players.append(snapshot)
+            print("Players in room: \(players.count)")
+        })
+    }
+    
+    func onPlayerRemoveObserve() {
+        DatabaseManager.shared.onPlayerRemove(on: vesPin, completion: { removedPlayer in
             
-            DatabaseManager.shared.onPlayerAdd(on: vesPin, completion: { snapshot in
-                print("\(snapshot.key) Added")
-                players.append(snapshot)
-                print("Players in room: \(players.count)")
-            })
+            // Remove player locally
+            players = players.filter{ $0.key != removedPlayer.key }
+            print("\(removedPlayer.key) Removed")
             
-            DatabaseManager.shared.onPlayerRemove(on: vesPin, completion: { removedPlayer in
-                
-                // Remove player locally
-                players = players.filter{ $0.key != removedPlayer.key }
-                print("\(removedPlayer.key) Removed")
-                
 //                let wasLeader = removedPlayer.childSnapshot(forPath: "leader").value as! Int == 1
 //
 //                if wasLeader {
@@ -136,39 +125,41 @@ struct RoomView: View {
 //                    // Set new leader
 //                    DatabaseManager.shared.giveLeadership(to: String(randomPlayerName), in: vesPin)
 //                }
-                print("Players in room: \(players.count)")
-            })
-            
-            DatabaseManager.shared.onPlayerChange(on: vesPin, completion: { snapshot in
-                print("\(snapshot.key) Changed")
-                if let index = players.firstIndex(where: {$0.key == snapshot.key}) {
-                    players[index] = snapshot
-                }
-                DatabaseManager.shared.nextTurn(in: vesPin, completion: { updatedPlayers in
-                    self.players = updatedPlayers
-                })
-                
-                if self.showWordPicking {
-                    if players.filter { $0.childSnapshot(forPath: "word").value as! String == "" }.count == 0 {
-                        DatabaseManager.shared.startGame(in: vesPin)
-                        DatabaseManager.shared.endWordPicking(in: vesPin)
-                    }
-                }
-            })
-            
-            DatabaseManager.shared.onRoomChange(on: vesPin, completion: { snapshot in
-                if snapshot.key == "gameOn" {
-                    self.game = snapshot.value as! Bool
-                }
-                
-                if snapshot.key == "showWordPick" {
-                    self.showWordPicking = snapshot.value as! Bool
-                }
-                
-                print("\(snapshot.key) Changed (ROOM)")
-            })
+            print("Players in room: \(players.count)")
+        })
+    }
     
-        }
+    func onPlayerChangeObserve() {
+        DatabaseManager.shared.onPlayerChange(on: vesPin, completion: { snapshot in
+            print("\(snapshot.key) Changed")
+            if let index = players.firstIndex(where: {$0.key == snapshot.key}) {
+                players[index] = snapshot
+            }
+            DatabaseManager.shared.nextTurn(in: vesPin, completion: { updatedPlayers in
+                self.players = updatedPlayers
+            })
+            
+            if self.showWordPicking {
+                if players.filter { $0.childSnapshot(forPath: "word").value as! String == "" }.count == 0 {
+                    DatabaseManager.shared.startGame(in: vesPin)
+                    DatabaseManager.shared.endWordPicking(in: vesPin)
+                }
+            }
+        })
+    }
+    
+    func onRoomChangeObserve() {
+        DatabaseManager.shared.onRoomChange(on: vesPin, completion: { snapshot in
+            if snapshot.key == "gameOn" {
+                self.game = snapshot.value as! Bool
+            }
+            
+            if snapshot.key == "showWordPick" {
+                self.showWordPicking = snapshot.value as! Bool
+            }
+            
+            print("\(snapshot.key) Changed (ROOM)")
+        })
     }
     
     func getPlayerLocal(name: String) -> DataSnapshot? {

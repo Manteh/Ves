@@ -8,29 +8,7 @@
 import Foundation
 import SwiftUI
 import AVKit
-
-let orangeGradientTopBottom = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "ED7E3F"), Color.init(hex: "EB713F")]), startPoint: .top, endPoint: .bottom)
-
-let orangeGradientLeftRight = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "F19B3E"), Color.init(hex: "E65340")]), startPoint: .leading, endPoint: .trailing)
-
-let orangeGradientBG = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "F19B3E"), Color.init(hex: "E65340")]), startPoint: .top, endPoint: .bottom)
-
-let orangeGradientText = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "ED7F3F"), Color.init(hex: "EB733F")]), startPoint: .top, endPoint: .bottom)
-
-let blueGradientButton = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "47ABEF"), Color.init(hex: "6062E9")]), startPoint: .leading, endPoint: .trailing)
-
-let blueGradientBG = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "47ABEF"), Color.init(hex: "6062E9")]), startPoint: .top, endPoint: .bottom)
-
-let blueGradientText = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "4AA1EE"), Color.init(hex: "508FED")]), startPoint: .top, endPoint: .bottom)
-
-extension View {
-    func selfSizeMask<T: View>(_ mask: T) -> some View {
-        ZStack {
-            self.opacity(0)
-            mask.mask(self)
-        }.fixedSize()
-    }
-}
+import UIKit
 
 extension View {
     func selfSizeMaskOrColor<T: View>(_ mask: T, _ enableMask: Bool) -> some View {
@@ -141,6 +119,7 @@ struct CustomTextField: UIViewRepresentable {
         }
         return true
     }
+    
   }
 
   @Binding var text: String
@@ -272,6 +251,20 @@ extension Array {
     }
 
 }
+
+let orangeGradientTopBottom = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "ED7E3F"), Color.init(hex: "EB713F")]), startPoint: .top, endPoint: .bottom)
+
+let orangeGradientLeftRight = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "F19B3E"), Color.init(hex: "E65340")]), startPoint: .leading, endPoint: .trailing)
+
+let orangeGradientBG = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "F19B3E"), Color.init(hex: "E65340")]), startPoint: .top, endPoint: .bottom)
+
+let orangeGradientText = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "ED7F3F"), Color.init(hex: "EB733F")]), startPoint: .top, endPoint: .bottom)
+
+let blueGradientButton = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "47ABEF"), Color.init(hex: "6062E9")]), startPoint: .leading, endPoint: .trailing)
+
+let blueGradientBG = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "47ABEF"), Color.init(hex: "6062E9")]), startPoint: .top, endPoint: .bottom)
+
+let blueGradientText = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "4AA1EE"), Color.init(hex: "508FED")]), startPoint: .top, endPoint: .bottom)
 
 
 

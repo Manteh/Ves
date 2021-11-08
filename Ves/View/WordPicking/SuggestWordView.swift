@@ -52,15 +52,6 @@ struct SuggestWordView: View {
                                     .font(.system(size: 30, weight: .heavy, design: .rounded))
                                     .foregroundColor(Color(hex: "333333"))
                                 Spacer()
-                                Button(action: {
-                                    withAnimation(.spring()) {
-                                        keyboardShowing! = false
-                                    }
-                                }, label: {
-                                    Image(systemName: "checkmark.square.fill")
-                                        .font(.system(size: 30, weight: .regular, design: .rounded))
-                                        .foregroundColor(Color(hex: "333333"))
-                                })
                             }
                             
                             VStack(alignment: .leading, spacing: 5) {

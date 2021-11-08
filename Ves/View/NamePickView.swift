@@ -84,6 +84,8 @@ struct NamePickView: View {
                 
                 NavigationLink(destination: RoomView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player), isActive: $buttonPressed) {
                     Button(action: {
+                        let impactMed = UIImpactFeedbackGenerator(style: .heavy)
+                        impactMed.impactOccurred()
                         /// Check if vesPin is empty, meaning player wants to create a new room
                         if name.count < 3 { return }
                         if vesPin.length == 0 {
@@ -128,7 +130,7 @@ struct NamePickView: View {
                                         .frame(width: 20)
                                     Text("ENTER")
                                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                                        .selfSizeMask(blueGradientText)
+                                        .selfSizeMaskOrColor(blueGradientText, true)
                                     Spacer()
                                 }
                                 .padding(.horizontal, 20)

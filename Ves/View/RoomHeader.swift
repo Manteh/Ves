@@ -16,9 +16,9 @@ struct RoomHeader: View {
     var body: some View {
         // Header
         VStack(alignment: .leading, spacing: 5) {
-            Text("\(players.count) players")
+            Text("\(players.count) PLAYERS")
                 .font(.system(size: 20, weight: .heavy, design: .rounded))
-                .selfSizeMask(orangeGradientText)
+                .selfSizeMaskOrColor(orangeGradientText, true)
             HStack {
                 Text(title)
                     .font(.system(size: 35, weight: .heavy, design: .rounded))
