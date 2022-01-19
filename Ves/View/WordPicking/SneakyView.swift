@@ -111,6 +111,7 @@ struct SneakyView: View {
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
 
     }
     

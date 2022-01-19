@@ -11,6 +11,7 @@ import FirebaseDatabase
 struct RoomHeader: View {
     @State var title: String
     @Binding var players: [DataSnapshot]
+    @Binding var localPlayer: Player
     let onMarkClick: () -> Void
     
     var body: some View {
@@ -32,9 +33,15 @@ struct RoomHeader: View {
                     Image(systemName: "xmark.square.fill")
                         .resizable()
                         .foregroundColor(.black.opacity(0.1))
+                        .opacity(markVisible() ? 1 : 0)
+                        .disabled(!markVisible())
                 })
                 .frame(width: 25, height: 25)
             }
         }
+    }
+    
+    func markVisible() -> Bool {
+        return players.filter { $0.key == localPlayer.name }.count != 0
     }
 }

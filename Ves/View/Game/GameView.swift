@@ -15,9 +15,14 @@ struct GameView: View {
     @Binding var vesPin: String
     @Binding var player: Player
     @Binding var players: [DataSnapshot]
+    @Binding var showWordReveal: Bool
     @State var igPlayers = [Player(name: "STEVE"), Player(name: "ELON"), Player(name: "BOB")]
     @State var passClicked = false
     @State var turnsMade = 0
+    @State var showRevealConfirm = false
+    @State var showGameSummary = false
+    @State var finishedPlayers: [DataSnapshot] = [DataSnapshot()]
+    @State var latestRevealPlayer: DataSnapshot = DataSnapshot()
     
     var body: some View {
         ZStack {
@@ -26,16 +31,17 @@ struct GameView: View {
             
             VStack(spacing: 0) {
                 
-                RoomHeader(title: "Guessing", players: $players, onMarkClick: {
-                    DatabaseManager.shared.removeFromRoom(with: player, from: vesPin)
+                RoomHeader(title: "Guessing", players: $players, localPlayer: $player, onMarkClick: {
+                    DatabaseManager.shared.removeFromRoom(with: player.name, from: vesPin)
                     self.navIsActive = false
                 })
                 
                 ScrollView(showsIndicators: false) {
                     ForEach($players, id: \.self) { p in
                         if players.index(of: p.wrappedValue) == 0 {
-                            currentTurnerView(currentTurnPlayer: p, localPlayer: $player, vesPin: $vesPin, passClicked: $passClicked)
+                            currentTurnerView(currentTurnPlayer: p, localPlayer: $player, vesPin: $vesPin, passClicked: $passClicked, showSheet: $showRevealConfirm)
                                 .onChange(of: passClicked, perform: { newValue in
+                                    print("passClicked")
                                     DatabaseManager.shared.turnMadeBy(name: p.wrappedValue.key, in: vesPin, completion: { updatedPlayers in
                                         print("Updated players: \(updatedPlayers)")
                                         self.players = updatedPlayers
@@ -54,12 +60,74 @@ struct GameView: View {
                     print("GameView appeared")
                 }
                 
+                LeaveRoomButton() {
+                    self.navIsActive = false
+                }
+                .offset(x: players.filter { $0.key == player.name }.count == 0 ? 0 : UIScreen.main.bounds.width + 500)
+                .disabled(players.filter { $0.key == player.name }.count != 0)
+                .animation(.spring())
+                
                 Spacer()
             }
             .padding(.vertical, 30)
             .padding(.horizontal, 25)
+            .overlay(
+                ZStack {
+                    HalfModalView(isShown: $showRevealConfirm) {
+                        RevealSheetView(showSheet: $showRevealConfirm) {
+                            // Confirm Reveal View Clicked
+                            self.showRevealConfirm = false
+                            DatabaseManager.shared.addToFinishedPlayers(with: players[0], to: vesPin) { finishedPlayer in
+                            }
+                        }
+                    }
+                    
+                }
+            )
+            .fullScreenCover(isPresented: $showWordReveal) {
+                WordRevealView(player: $latestRevealPlayer, players: $players, onButtonClick: {
+                    self.showWordReveal = false
+                    if players.count == 0 {
+                        DatabaseManager.shared.getFinishedPlayers(in: vesPin) { finishedPlayers in
+                            if finishedPlayers.count != 0 {
+                                self.finishedPlayers = finishedPlayers
+                                self.showGameSummary = true
+                            }
+                        }
+                    }
+                })
+            }
+            .fullScreenCover(isPresented: $showGameSummary) {
+                GameSummaryView(finishedPlayers: $finishedPlayers) {
+                    self.showGameSummary = false
+                    self.navIsActive = false
+                }
+            }
         }
         .preferredColorScheme(.light)
+        .onAppear {
+            DatabaseManager.shared.onRoomChange(on: vesPin, completion: { snapshot in
+                
+                if snapshot.key == "latestReveal" {
+                    print("Value: \(snapshot)")
+                    
+                    if !showWordReveal {
+                        self.latestRevealPlayer = snapshot
+                        DatabaseManager.shared.performWordReveal(in: vesPin)
+                    } else {
+                        withAnimation(.spring()) {
+                            self.showWordReveal = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.latestRevealPlayer = snapshot
+                                self.showWordReveal = true
+                            }
+                        }
+                    }
+                    
+                }
+                
+            })
+        }
     }
 }
 
@@ -69,7 +137,9 @@ struct currentTurnerView: View {
     @Binding var localPlayer: Player
     @Binding var vesPin: String
     @Binding var passClicked: Bool
+    @Binding var showSheet: Bool
     @State var controlOpacity = 1
+    
     
     var body: some View {
         VStack {
@@ -90,18 +160,22 @@ struct currentTurnerView: View {
                 
                 if isLocalTurn() {
                     VStack(spacing: 20) {
-                        HStack {
-                            Text("Reveal me")
-                            Spacer()
-                            Image(systemName: "eyes")
-                        }
-                        .padding(15)
-                        .padding(.vertical, 5)
-                        .foregroundColor(.white)
-                        .background(
-                            RoundedRectangle(cornerRadius: 5)
-                                .foregroundColor(.white.opacity(0.1))
-                        )
+                        Button(action: {
+                            showSheet.toggle()
+                        }, label: {
+                            HStack {
+                                Text("Reveal me")
+                                Spacer()
+                                Image(systemName: "eyes")
+                            }
+                            .padding(15)
+                            .padding(.vertical, 5)
+                            .foregroundColor(.white)
+                            .background(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .foregroundColor(.white.opacity(0.1))
+                            )
+                        })
                         
                         Button(action: {
                             // Remove playerObj at index 0 at put it last
@@ -248,12 +322,6 @@ struct Line: Shape {
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: rect.width, y: 0))
         return path
-    }
-}
-
-struct GameView_Previews: PreviewProvider {
-    static var previews: some View {
-        GameView(navIsActive: .constant(true), vesPin: .constant("XXXXXX"), player: .constant(Player(name: "JXS")), players: .constant([DataSnapshot.init()]))
     }
 }
 

@@ -43,10 +43,6 @@ struct HomeView: View {
                         
                     }
                     
-                    Footer()
-                    .frame(width: 240)
-                    .padding(.top, 50)
-                    
                 }
                 .padding(.horizontal, 25)
                 .padding(.top, safeTop() + 20)
@@ -56,8 +52,12 @@ struct HomeView: View {
             .navigationBarTitle("")
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
+            .preferredColorScheme(.light)
+            .onAppear {
+                UIApplication.shared.statusBarStyle = .lightContent
+            }
         }
-        .preferredColorScheme(.dark)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

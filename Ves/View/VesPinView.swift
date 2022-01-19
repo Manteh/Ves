@@ -19,6 +19,7 @@ struct VesPinView: View {
     @State var currentPinIndex = 0
     @State var typeCount = 0
     @State var pinAttempts: Int = 0
+    @State var showWhatIsVesPin = false
     
     var body: some View {
 
@@ -81,7 +82,9 @@ struct VesPinView: View {
                         
                     
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        self.showWhatIsVesPin.toggle()
+                    }, label: {
                         HStack(alignment: .center) {
                             Spacer()
                             Image(systemName: "questionmark.circle.fill")
@@ -94,6 +97,15 @@ struct VesPinView: View {
                         }
                         .foregroundColor(.white)
                     })
+                    .sheet(isPresented: $showWhatIsVesPin){
+                        VesPinExplain()
+                            .onAppear {
+                                self.enableTyping = false
+                            }
+                            .onDisappear {
+                                self.enableTyping = true
+                            }
+                    }
                     
                         
                     

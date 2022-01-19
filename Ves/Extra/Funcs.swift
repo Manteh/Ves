@@ -266,5 +266,7 @@ let blueGradientBG = LinearGradient(gradient: Gradient(colors: [Color.init(hex: 
 
 let blueGradientText = LinearGradient(gradient: Gradient(colors: [Color.init(hex: "4AA1EE"), Color.init(hex: "508FED")]), startPoint: .top, endPoint: .bottom)
 
+let whiteSolid = LinearGradient(gradient: Gradient(colors: [.white]), startPoint: .leading, endPoint: .trailing)
+
 
 

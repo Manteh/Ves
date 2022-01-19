@@ -18,7 +18,9 @@ struct RoomView: View {
     @State var playerToPick: String = ""
     @State var players = [DataSnapshot]()
     @State var showWordPicking = false
+    @State var showWordReveal = false
     @State var popOffset = UIScreen.main.bounds.height
+    @State var enableSneakyView = false
     
     let columns = [
         GridItem(.flexible(), spacing: 15),
@@ -34,8 +36,8 @@ struct RoomView: View {
                 VStack(spacing: 0) {
                     
                     // Header titles
-                    RoomHeader(title: "In The Room", players: $players, onMarkClick: {
-                        DatabaseManager.shared.removeFromRoom(with: player, from: vesPin)
+                    RoomHeader(title: "In The Room", players: $players, localPlayer: $player, onMarkClick: {
+                        DatabaseManager.shared.removeFromRoom(with: player.name, from: vesPin)
                         self.navIsActive = false
                     })
                     .padding(.bottom, 50)
@@ -58,6 +60,7 @@ struct RoomView: View {
                     // Continue button for room leaders
                     RoomContinue(onButtonClick: {
                         assignPlayers(vesPin: vesPin) {
+                            //DatabaseManager.shared.startGame(in: vesPin)
                             DatabaseManager.shared.startWordPicking(in: vesPin)
                         }
                     })
@@ -71,10 +74,10 @@ struct RoomView: View {
                 .padding(.top, 30)
                 .padding(.horizontal, 25)
             } else {
-                GameView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player, players: $players)
+                GameView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player, players: $players, showWordReveal: $showWordReveal)
             }
             
-            SneakyView(isShowing: $showWordPicking, vesPin: $vesPin, player: $player, players: $players)
+            SneakyView(isShowing: $enableSneakyView, vesPin: $vesPin, player: $player, players: $players)
                 .offset(y: showWordPicking ? 0 : popOffset)
                 .animation(.easeInOut, value: showWordPicking)
             
@@ -155,7 +158,19 @@ struct RoomView: View {
             }
             
             if snapshot.key == "showWordPick" {
-                self.showWordPicking = snapshot.value as! Bool
+                if snapshot.value as! Bool {
+                    self.enableSneakyView = true
+                    self.showWordPicking = true
+                } else {
+                    self.showWordPicking = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.enableSneakyView = false
+                    }
+                }
+            }
+            
+            if snapshot.key == "showWordReveal" && snapshot.value as! Bool == true{
+                self.showWordReveal = snapshot.value as! Bool
             }
             
             print("\(snapshot.key) Changed (ROOM)")

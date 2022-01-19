@@ -21,6 +21,7 @@ struct NamePickView: View {
     @State var player = Player(name: "", word: "", wordTo: "", wordFrom: "")
     
     @State var pinAttempts: Int = 0
+    @State var loading = false
     
     var body: some View {
         ZStack {
@@ -82,6 +83,11 @@ struct NamePickView: View {
                     }
                 }
                 
+                if self.loading {
+                    LoadingIndicator(animate: false)
+                        .frame(width: 50, height: 50)
+                }
+                
                 NavigationLink(destination: RoomView(navIsActive: $navIsActive, vesPin: $vesPin, player: $player), isActive: $buttonPressed) {
                     Button(action: {
                         let impactMed = UIImpactFeedbackGenerator(style: .heavy)
@@ -90,6 +96,7 @@ struct NamePickView: View {
                         if name.count < 3 { return }
                         if vesPin.length == 0 {
                             player.name = name
+                            self.loading = true
                             DatabaseManager.shared.createNewRoom(with: player, completion: { pin in
                                 vesPin = pin
                                 keyboardShowing = false
@@ -150,6 +157,7 @@ struct NamePickView: View {
                 }
                 .isDetailLink(false)
                 .disabled(name.count < 3 ? true : false)
+                .opacity(self.loading ? 0 : 1)
                 
                 Spacer()
                 
@@ -162,9 +170,11 @@ struct NamePickView: View {
         .navigationBarHidden(true)
         .onAppear {
             keyboardShowing = true
+            loading = false
         }
         .onDisappear {
             keyboardShowing = false
+            loading = false
         }
     }
 }

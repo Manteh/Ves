@@ -40,7 +40,9 @@ extension DatabaseManager {
             // Room created
             self.database.child("\(vesPinStringified)").child("roomData").setValue([
                 "gameOn": false,
-                "showWordPick": false
+                "showWordPick": false,
+                "showWordReveal": false,
+                "latestReveal": [""]
             ])
             self.addToRoom(with: player, to: vesPinStringified, completion: {
                 self.giveLeadership(to: player.name, in: vesPinStringified)
@@ -105,6 +107,59 @@ extension DatabaseManager {
         })
     }
     
+    public func addToFinishedPlayers(with player: DataSnapshot, to vesPin: String, completion: @escaping ((DataSnapshot) -> Void)) {
+        print("Adding \(player.key) to \(vesPin) finished")
+        self.database.child("\(vesPin)/roomData/finishedPlayers/\(player.key)").setValue([
+            "word": player.childSnapshot(forPath: "word").value,
+            "wordTo": player.childSnapshot(forPath: "wordTo").value,
+            "wordFrom": player.childSnapshot(forPath: "wordFrom").value,
+            "turns": player.childSnapshot(forPath: "turns").value,
+        ])
+        
+        self.database.child("\(vesPin)/roomData/latestReveal").setValue([
+            "name": player.key,
+            "word": player.childSnapshot(forPath: "word").value,
+            "wordTo": player.childSnapshot(forPath: "wordTo").value,
+            "wordFrom": player.childSnapshot(forPath: "wordFrom").value,
+            "turns": player.childSnapshot(forPath: "turns").value,
+        ])
+        
+        self.removeFromRoom(with: player.key, from: vesPin)
+        completion(player)
+    }
+    
+    public func getLatestReveal(in vesPin: String, completion: @escaping ((DataSnapshot) -> Void)) {
+        roomExists(with: vesPin, completion: { exists in
+            if !exists { return }
+                
+            self.database.child("\(vesPin)/roomData/latestReveal").observeSingleEvent(of: .value) { snapshot in
+                var players: [DataSnapshot] = []
+                for player in snapshot.children.allObjects as! [DataSnapshot] {
+                    players.append(player)
+                }
+                completion(players[0])
+            }
+        })
+    }
+    
+    public func getFinishedPlayers(in vesPin: String, completion: @escaping (([DataSnapshot]) -> Void)) {
+        roomExists(with: vesPin, completion: { exists in
+            if !exists { return }
+                
+            self.database.child("\(vesPin)/roomData/finishedPlayers").observeSingleEvent(of: .value) { snapshot in
+                var players: [DataSnapshot] = []
+                for player in snapshot.children.allObjects as! [DataSnapshot] {
+                    players.append(player)
+                }
+                completion(players.sorted(by: { a, b in
+                    let turnA = a.childSnapshot(forPath: "turns").value as! Int
+                    let turnB = b.childSnapshot(forPath: "turns").value as! Int
+                    return turnA < turnB
+                }))
+            }
+        })
+    }
+    
     public func giveLeadership(to name: String, in vesPin: String) {
         self.database.child("\(vesPin)/players/\(name)").child("leader").setValue(true)
     }
@@ -121,23 +176,27 @@ extension DatabaseManager {
         }
     }
     
-    public func removeFromRoom(with player: Player, from vesPin: String) {
+    public func removeFromRoom(with name: String, from vesPin: String) {
         print("RemoveFromRoom:")
-        playerExists(in: vesPin, with: player.name, completion: { exists in
+        playerExists(in: vesPin, with: name, completion: { exists in
             print("RemoveFromRoom: Checking if player exists")
             guard !exists else {
                 print("RemoveFromRoom: Performing player removal")
                 DispatchQueue.main.async {
-                    self.database.child("\(vesPin)/players/\(player.name)").setValue([])
-                    print("Removed \(player.name) from \(vesPin)")
+                    self.database.child("\(vesPin)/players/\(name)").setValue([])
+                    print("Removed \(name) from \(vesPin)")
                 }
                 
                 print("RemoveFromRoom: Checking if room is empty")
                 DispatchQueue.main.async {
                     self.getPlayers(in: vesPin, completion: { players in
                         if players.count == 0 {
-                            print("RemoveFromRoom: Deleting room")
-                            self.deleteRoom(with: vesPin)
+                            self.getFinishedPlayers(in: vesPin) { finishedPlayers in
+                                if finishedPlayers.count == 0 {
+                                    print("RemoveFromRoom: Deleting room")
+                                    self.deleteRoom(with: vesPin)
+                                }
+                            }
                         }
                     })
                 }
@@ -222,6 +281,11 @@ extension DatabaseManager {
         self.database.child("\(vesPin)/roomData").observe(.childChanged, with: { snapshot in
             completion(snapshot)
         })
+    }
+    
+    public func performWordReveal(in vesPin: String) {
+        self.database.child("\(vesPin)/roomData/").updateChildValues(["showWordReveal": true])
+        self.database.child("\(vesPin)/roomData/").updateChildValues(["showWordReveal": false])
     }
     
 }
@@ -310,5 +374,6 @@ extension DatabaseManager {
             completion(sortedPlayers)
         })
     }
+    
 }
 

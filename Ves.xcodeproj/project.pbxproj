@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		F9BE230E3CA5CAF1D43303E4 /* Pods_Ves.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EC673957DC11C781BF3A06 /* Pods_Ves.framework */; };
+		FF1D7442275F828D00A9D837 /* RevealSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D7441275F828D00A9D837 /* RevealSheetView.swift */; };
+		FF1D7444275F853500A9D837 /* RevealSheetButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D7443275F853500A9D837 /* RevealSheetButtonView.swift */; };
+		FF1D744E275FB05700A9D837 /* HalfModalView_v1.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D744D275FB05700A9D837 /* HalfModalView_v1.swift */; };
+		FF1D7451275FB4D100A9D837 /* WordRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D7450275FB4D100A9D837 /* WordRevealView.swift */; };
 		FF21A9E3270EE73700166CCC /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21A9E2270EE73700166CCC /* DatabaseManager.swift */; };
-		FF4628F62722FF7E00E84422 /* words.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF4628F52722FF7E00E84422 /* words.txt */; };
 		FF57267C2715C5430014BF5E /* RoomPlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF57267B2715C5430014BF5E /* RoomPlayerCell.swift */; };
-		FF57267E27162C120014BF5E /* RandomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF57267D27162C120014BF5E /* RandomPickerView.swift */; };
+		FF5CBD75277613B90083147C /* VesPinExplain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5CBD74277613B90083147C /* VesPinExplain.swift */; };
 		FF78A38827135CF90052B493 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF78A38727135CF90052B493 /* GoogleService-Info.plist */; };
+		FF7C6A25277F6C0D003F9A64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF9921F926F64E710082A1D0 /* Assets.xcassets */; };
 		FF90ED912737344700304A55 /* NextSplitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED902737344700304A55 /* NextSplitter.swift */; };
 		FF90ED932737357400304A55 /* RoomHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED922737357400304A55 /* RoomHeader.swift */; };
 		FF90ED95273740C200304A55 /* VesPinBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90ED94273740C200304A55 /* VesPinBadge.swift */; };
@@ -24,12 +28,13 @@
 		FF90EDA2273931A900304A55 /* Footer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90EDA1273931A900304A55 /* Footer.swift */; };
 		FF90EDA42739462D00304A55 /* PinFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90EDA32739462C00304A55 /* PinFieldView.swift */; };
 		FF9921F626F64E6C0082A1D0 /* VesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9921F526F64E6C0082A1D0 /* VesApp.swift */; };
-		FF9921FA26F64E710082A1D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF9921F926F64E710082A1D0 /* Assets.xcassets */; };
 		FF9921FD26F64E710082A1D0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF9921FC26F64E710082A1D0 /* Preview Assets.xcassets */; };
 		FF99220526F64EDA0082A1D0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF99220426F64EDA0082A1D0 /* HomeView.swift */; };
 		FF99220926F64F780082A1D0 /* Funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF99220826F64F780082A1D0 /* Funcs.swift */; };
 		FF99220B26F675F30082A1D0 /* VesPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF99220A26F675F30082A1D0 /* VesPinView.swift */; };
 		FF99220D26F729250082A1D0 /* PinDigitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF99220C26F729250082A1D0 /* PinDigitView.swift */; };
+		FFE146D62761FA6400D1E73E /* LeaveRoomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE146D52761FA6400D1E73E /* LeaveRoomButton.swift */; };
+		FFE146D92761FE2B00D1E73E /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FFE146D82761FE2B00D1E73E /* video.mp4 */; };
 		FFE31387271E1E7900070C4A /* SneakyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE31386271E1E7900070C4A /* SneakyView.swift */; };
 		FFE3138A271E2DBB00070C4A /* SuggestWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE31389271E2DBB00070C4A /* SuggestWordView.swift */; };
 		FFE3138D271EE9B400070C4A /* WaitingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE3138C271EE9AF00070C4A /* WaitingView.swift */; };
@@ -37,10 +42,11 @@
 		FFE31391271EF99A00070C4A /* process.json in Resources */ = {isa = PBXBuildFile; fileRef = FFE31390271EF99500070C4A /* process.json */; };
 		FFE31393271EFAC400070C4A /* thinking.json in Resources */ = {isa = PBXBuildFile; fileRef = FFE31392271EFAC300070C4A /* thinking.json */; };
 		FFE31395271F01D500070C4A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE31394271F01D500070C4A /* GameView.swift */; };
+		FFE59500276B6525001BFA5C /* GameSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE594FF276B6525001BFA5C /* GameSummaryView.swift */; };
+		FFE59503276B6969001BFA5C /* GameSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE59502276B6969001BFA5C /* GameSummaryCard.swift */; };
 		FFEC397D26FCBA19009A0D59 /* RoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC397C26FCBA19009A0D59 /* RoomView.swift */; };
 		FFEC398026FCC81E009A0D59 /* Rooms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC397F26FCC81E009A0D59 /* Rooms.swift */; };
 		FFEC398427009773009A0D59 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC398327009772009A0D59 /* Players.swift */; };
-		FFECDE6026F91D07002F2DB2 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FFECDE5F26F91D06002F2DB2 /* video.mp4 */; };
 		FFECDE6226FBB67C002F2DB2 /* NamePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,10 +54,13 @@
 		06EC673957DC11C781BF3A06 /* Pods_Ves.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ves.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		60AF974998AFE89F26D3D780 /* Pods-Ves.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ves.debug.xcconfig"; path = "Target Support Files/Pods-Ves/Pods-Ves.debug.xcconfig"; sourceTree = "<group>"; };
 		73822EA73297A3DEDD30474A /* Pods-Ves.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ves.release.xcconfig"; path = "Target Support Files/Pods-Ves/Pods-Ves.release.xcconfig"; sourceTree = "<group>"; };
+		FF1D7441275F828D00A9D837 /* RevealSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealSheetView.swift; sourceTree = "<group>"; };
+		FF1D7443275F853500A9D837 /* RevealSheetButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealSheetButtonView.swift; sourceTree = "<group>"; };
+		FF1D744D275FB05700A9D837 /* HalfModalView_v1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalView_v1.swift; sourceTree = "<group>"; };
+		FF1D7450275FB4D100A9D837 /* WordRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRevealView.swift; sourceTree = "<group>"; };
 		FF21A9E2270EE73700166CCC /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
-		FF4628F52722FF7E00E84422 /* words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
 		FF57267B2715C5430014BF5E /* RoomPlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomPlayerCell.swift; sourceTree = "<group>"; };
-		FF57267D27162C120014BF5E /* RandomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPickerView.swift; sourceTree = "<group>"; };
+		FF5CBD74277613B90083147C /* VesPinExplain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VesPinExplain.swift; sourceTree = "<group>"; };
 		FF78A38727135CF90052B493 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FF90ED902737344700304A55 /* NextSplitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextSplitter.swift; sourceTree = "<group>"; };
 		FF90ED922737357400304A55 /* RoomHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomHeader.swift; sourceTree = "<group>"; };
@@ -72,6 +81,8 @@
 		FF99220826F64F780082A1D0 /* Funcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funcs.swift; sourceTree = "<group>"; };
 		FF99220A26F675F30082A1D0 /* VesPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VesPinView.swift; sourceTree = "<group>"; };
 		FF99220C26F729250082A1D0 /* PinDigitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDigitView.swift; sourceTree = "<group>"; };
+		FFE146D52761FA6400D1E73E /* LeaveRoomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveRoomButton.swift; sourceTree = "<group>"; };
+		FFE146D82761FE2B00D1E73E /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = video.mp4; path = ../../../../../Downloads/video.mp4; sourceTree = "<group>"; };
 		FFE31386271E1E7900070C4A /* SneakyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SneakyView.swift; sourceTree = "<group>"; };
 		FFE31389271E2DBB00070C4A /* SuggestWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestWordView.swift; sourceTree = "<group>"; };
 		FFE3138C271EE9AF00070C4A /* WaitingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingView.swift; sourceTree = "<group>"; };
@@ -79,10 +90,11 @@
 		FFE31390271EF99500070C4A /* process.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = process.json; sourceTree = "<group>"; };
 		FFE31392271EFAC300070C4A /* thinking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = thinking.json; sourceTree = "<group>"; };
 		FFE31394271F01D500070C4A /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		FFE594FF276B6525001BFA5C /* GameSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSummaryView.swift; sourceTree = "<group>"; };
+		FFE59502276B6969001BFA5C /* GameSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSummaryCard.swift; sourceTree = "<group>"; };
 		FFEC397C26FCBA19009A0D59 /* RoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomView.swift; sourceTree = "<group>"; };
 		FFEC397F26FCC81E009A0D59 /* Rooms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rooms.swift; sourceTree = "<group>"; };
 		FFEC398327009772009A0D59 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
-		FFECDE5F26F91D06002F2DB2 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video.mp4; sourceTree = "<group>"; };
 		FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +125,24 @@
 				73822EA73297A3DEDD30474A /* Pods-Ves.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		FF1D7445275F94AE00A9D837 /* RevealSheet */ = {
+			isa = PBXGroup;
+			children = (
+				FF1D744D275FB05700A9D837 /* HalfModalView_v1.swift */,
+				FF1D7441275F828D00A9D837 /* RevealSheetView.swift */,
+				FF1D7443275F853500A9D837 /* RevealSheetButtonView.swift */,
+			);
+			path = RevealSheet;
+			sourceTree = "<group>";
+		};
+		FF1D744F275FB4C300A9D837 /* WordReveal */ = {
+			isa = PBXGroup;
+			children = (
+				FF1D7450275FB4D100A9D837 /* WordRevealView.swift */,
+			);
+			path = WordReveal;
 			sourceTree = "<group>";
 		};
 		FF57267A2715C4F50014BF5E /* Room */ = {
@@ -174,9 +204,8 @@
 				FF99220626F64F0B0082A1D0 /* View */,
 				FF99220726F64F500082A1D0 /* Extra */,
 				FF9921FE26F64E710082A1D0 /* Info.plist */,
-				FF4628F52722FF7E00E84422 /* words.txt */,
-				FFECDE5F26F91D06002F2DB2 /* video.mp4 */,
 				FF78A38727135CF90052B493 /* GoogleService-Info.plist */,
+				FFE146D82761FE2B00D1E73E /* video.mp4 */,
 				FF9921F926F64E710082A1D0 /* Assets.xcassets */,
 				FF9921FB26F64E710082A1D0 /* Preview Content */,
 			);
@@ -201,10 +230,10 @@
 				FF99220A26F675F30082A1D0 /* VesPinView.swift */,
 				FF90EDA32739462C00304A55 /* PinFieldView.swift */,
 				FF99220C26F729250082A1D0 /* PinDigitView.swift */,
+				FF5CBD74277613B90083147C /* VesPinExplain.swift */,
 				FFECDE6126FBB67C002F2DB2 /* NamePickView.swift */,
 				FF57267A2715C4F50014BF5E /* Room */,
 				FFE31388271E2D9A00070C4A /* WordPicking */,
-				FF57267D27162C120014BF5E /* RandomPickerView.swift */,
 				FFE3138B271EE98D00070C4A /* Game */,
 				FF90ED922737357400304A55 /* RoomHeader.swift */,
 			);
@@ -224,6 +253,7 @@
 			children = (
 				FFE31386271E1E7900070C4A /* SneakyView.swift */,
 				FFE31389271E2DBB00070C4A /* SuggestWordView.swift */,
+				FFE3138C271EE9AF00070C4A /* WaitingView.swift */,
 			);
 			path = WordPicking;
 			sourceTree = "<group>";
@@ -231,11 +261,23 @@
 		FFE3138B271EE98D00070C4A /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				FFE3138C271EE9AF00070C4A /* WaitingView.swift */,
+				FF1D744F275FB4C300A9D837 /* WordReveal */,
+				FF1D7445275F94AE00A9D837 /* RevealSheet */,
 				FFE31394271F01D500070C4A /* GameView.swift */,
 				FF90ED902737344700304A55 /* NextSplitter.swift */,
+				FFE146D52761FA6400D1E73E /* LeaveRoomButton.swift */,
+				FFE59501276B6922001BFA5C /* GameSummary */,
 			);
 			path = Game;
+			sourceTree = "<group>";
+		};
+		FFE59501276B6922001BFA5C /* GameSummary */ = {
+			isa = PBXGroup;
+			children = (
+				FFE594FF276B6525001BFA5C /* GameSummaryView.swift */,
+				FFE59502276B6969001BFA5C /* GameSummaryCard.swift */,
+			);
+			path = GameSummary;
 			sourceTree = "<group>";
 		};
 		FFEC397E26FCC806009A0D59 /* ViewModel */ = {
@@ -265,6 +307,8 @@
 			dependencies = (
 			);
 			name = Ves;
+			packageProductDependencies = (
+			);
 			productName = Ves;
 			productReference = FF9921F226F64E6C0082A1D0 /* Ves.app */;
 			productType = "com.apple.product-type.application";
@@ -292,6 +336,8 @@
 				Base,
 			);
 			mainGroup = FF9921E926F64E6C0082A1D0;
+			packageReferences = (
+			);
 			productRefGroup = FF9921F326F64E6C0082A1D0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -309,10 +355,9 @@
 				FF9921FD26F64E710082A1D0 /* Preview Assets.xcassets in Resources */,
 				FFE31391271EF99A00070C4A /* process.json in Resources */,
 				FF78A38827135CF90052B493 /* GoogleService-Info.plist in Resources */,
-				FF9921FA26F64E710082A1D0 /* Assets.xcassets in Resources */,
+				FFE146D92761FE2B00D1E73E /* video.mp4 in Resources */,
+				FF7C6A25277F6C0D003F9A64 /* Assets.xcassets in Resources */,
 				FFE3138F271EF4E500070C4A /* waiting.json in Resources */,
-				FFECDE6026F91D07002F2DB2 /* video.mp4 in Resources */,
-				FF4628F62722FF7E00E84422 /* words.txt in Resources */,
 				FFE31393271EFAC400070C4A /* thinking.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,7 +416,9 @@
 				FFE31387271E1E7900070C4A /* SneakyView.swift in Sources */,
 				FF90ED9A273927CD00304A55 /* GameRules.swift in Sources */,
 				FF90EDA2273931A900304A55 /* Footer.swift in Sources */,
+				FF1D7442275F828D00A9D837 /* RevealSheetView.swift in Sources */,
 				FF90EDA42739462D00304A55 /* PinFieldView.swift in Sources */,
+				FF1D7451275FB4D100A9D837 /* WordRevealView.swift in Sources */,
 				FFEC397D26FCBA19009A0D59 /* RoomView.swift in Sources */,
 				FF90ED9C27392DEB00304A55 /* Logo.swift in Sources */,
 				FFE3138D271EE9B400070C4A /* WaitingView.swift in Sources */,
@@ -380,17 +427,22 @@
 				FFE3138A271E2DBB00070C4A /* SuggestWordView.swift in Sources */,
 				FF90ED972737F56900304A55 /* RoomContinue.swift in Sources */,
 				FF99220D26F729250082A1D0 /* PinDigitView.swift in Sources */,
+				FFE146D62761FA6400D1E73E /* LeaveRoomButton.swift in Sources */,
 				FFECDE6226FBB67C002F2DB2 /* NamePickView.swift in Sources */,
-				FF57267E27162C120014BF5E /* RandomPickerView.swift in Sources */,
+				FFE59503276B6969001BFA5C /* GameSummaryCard.swift in Sources */,
 				FFEC398026FCC81E009A0D59 /* Rooms.swift in Sources */,
 				FF90ED95273740C200304A55 /* VesPinBadge.swift in Sources */,
+				FF1D744E275FB05700A9D837 /* HalfModalView_v1.swift in Sources */,
 				FF90ED9E27392ECF00304A55 /* CreateVesButton.swift in Sources */,
 				FF9921F626F64E6C0082A1D0 /* VesApp.swift in Sources */,
+				FF1D7444275F853500A9D837 /* RevealSheetButtonView.swift in Sources */,
 				FFE31395271F01D500070C4A /* GameView.swift in Sources */,
 				FF90ED912737344700304A55 /* NextSplitter.swift in Sources */,
+				FFE59500276B6525001BFA5C /* GameSummaryView.swift in Sources */,
 				FFEC398427009773009A0D59 /* Players.swift in Sources */,
 				FF57267C2715C5430014BF5E /* RoomPlayerCell.swift in Sources */,
 				FF21A9E3270EE73700166CCC /* DatabaseManager.swift in Sources */,
+				FF5CBD75277613B90083147C /* VesPinExplain.swift in Sources */,
 				FF99220B26F675F30082A1D0 /* VesPinView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +485,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -449,7 +503,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -494,7 +548,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -504,7 +560,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -520,12 +576,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Ves/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Ves/Assets.xcassets Ves/Preview\\ Content";
 				DEVELOPMENT_TEAM = 924BBQ78BA;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Ves/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -543,12 +600,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Ves/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Ves/Assets.xcassets Ves/Preview\\ Content";
 				DEVELOPMENT_TEAM = 924BBQ78BA;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Ves/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
