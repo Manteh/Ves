@@ -9,7 +9,3 @@ The purpose of the game is to try to guess a word that you were given by another
 Every player has to think of a random word (e.g. Snake, Apple or King Kong) to give to another player that is randomly chosen to you.
 
 After every player has received their words, the game will begin.
-
-# Views that aren't yet included into the app
-
-<img width="586" alt="image" src="https://user-images.githubusercontent.com/32678599/140741652-2759b736-6eb1-4cea-9130-8da274e9858a.png">
